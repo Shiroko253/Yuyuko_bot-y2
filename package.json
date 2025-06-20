@@ -1,0 +1,18 @@
+{
+  "name": "yuyuko_bot-y2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "discord.js": "^14.20.0",
+    "dotenv": "^16.5.0",
+    "install": "^0.13.0"
+  }
+}
