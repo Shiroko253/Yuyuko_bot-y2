@@ -1,0 +1,232 @@
+{
+  "shop_item": [
+    {
+      "name": "香烟",
+      "price": 20,
+      "tax": 2.5,
+      "stress": 5
+    },
+    {
+      "name": "台灣啤酒",
+      "price": 37,
+      "tax": 5.0,
+      "stress": 10
+    },
+    {
+      "name": "加大便當",
+      "price": 200,
+      "tax": 10.5,
+      "stress": 45
+    },
+    {
+      "name": "雞肉便當",
+      "price": 230,
+      "tax": 20.0,
+      "stress": 25
+    },
+    {
+      "name": "雙層黑格斯牛肉漢堡",
+      "price": 1500,
+      "tax": 60.0,
+      "stress": 100
+    },
+    {
+      "name": "瘋狂星期四",
+      "price": 1000,
+      "tax": 15.0,
+      "stress": 80
+    },
+    {
+      "name": "經典熱狗",
+      "price": 50,
+      "tax": 5.0,
+      "stress": 15
+    },
+    {
+      "name": "日式拉麵",
+      "price": 120,
+      "tax": 10.0,
+      "stress": 30
+    },
+    {
+      "name": "經典炸雞",
+      "price": 150,
+      "tax": 15.0,
+      "stress": 40
+    },
+    {
+      "name": "水果塔",
+      "price": 200,
+      "tax": 20.0,
+      "stress": 20
+    },
+    {
+      "name": "經典薯條",
+      "price": 50,
+      "tax": 5.0,
+      "stress": 10
+    },
+    {
+      "name": "大雜燴",
+      "price": 1300,
+      "tax": 23.0,
+      "stress": 55
+    },
+    {
+      "name": "俱滅煞鍋",
+      "price": 175000,
+      "tax": 1000.0,
+      "stress": 100
+    },
+    {
+      "name": "櫻花靈團子",
+      "price": 80,
+      "tax": 8.0,
+      "stress": 25
+    },
+    {
+      "name": "幽冥梅酒",
+      "price": 300,
+      "tax": 15.0,
+      "stress": 50
+    },
+    {
+      "name": "彼岸花茶",
+      "price": 120,
+      "tax": 10.0,
+      "stress": 30
+    },
+    {
+      "name": "魂魄壽司",
+      "price": 250,
+      "tax": 20.0,
+      "stress": 40
+    },
+    {
+      "name": "冥界月餅",
+      "price": 200,
+      "tax": 18.0,
+      "stress": 35
+    },
+    {
+      "name": "幽魂桃花羹",
+      "price": 150,
+      "tax": 12.0,
+      "stress": 30
+    },
+    {
+      "name": "冥柚靈霜",
+      "price": 180,
+      "tax": 15.0,
+      "stress": 35
+    },
+    {
+      "name": "蓮霧魂露",
+      "price": 100,
+      "tax": 8.0,
+      "stress": 25
+    },
+    {
+      "name": "枇杷幽膏",
+      "price": 220,
+      "tax": 18.0,
+      "stress": 40
+    },
+    {
+      "name": "荔枝鬼珠",
+      "price": 250,
+      "tax": 20.0,
+      "stress": 45
+    },
+    {
+      "name": "蜜漬柿餅",
+      "price": 90,
+      "tax": 8.0,
+      "stress": 20
+    },
+    {
+      "name": "芒果冰沙",
+      "price": 110,
+      "tax": 10.0,
+      "stress": 25
+    },
+    {
+      "name": "龍眼蜜茶",
+      "price": 80,
+      "tax": 7.0,
+      "stress": 15
+    },
+    {
+      "name": "鳳梨酥",
+      "price": 150,
+      "tax": 12.0,
+      "stress": 30
+    },
+    {
+      "name": "鮮橙果盤",
+      "price": 200,
+      "tax": 15.0,
+      "stress": 35
+    },
+    {
+      "name": "桂圓紅棗湯",
+      "price": 100,
+      "tax": 8.0,
+      "stress": 20
+    },
+    {
+      "name": "芭樂切盤",
+      "price": 120,
+      "tax": 10.0,
+      "stress": 25
+    },
+    {
+      "name": "楊梅果汁",
+      "price": 90,
+      "tax": 7.5,
+      "stress": 15
+    },
+    {
+      "name": "椰棗奶昔",
+      "price": 160,
+      "tax": 12.5,
+      "stress": 30
+    },
+    {
+      "name": "水蜜桃果凍",
+      "price": 180,
+      "tax": 14.0,
+      "stress": 35
+    },
+    {
+      "name": "靈夢的博麗茶泡飯",
+      "price": 150,
+      "tax": 12.0,
+      "stress": 35
+    },
+    {
+      "name": "魔理沙的魔法菇燴飯",
+      "price": 180,
+      "tax": 14.0,
+      "stress": 40
+    },
+    {
+      "name": "咲夜的紅茶牛肉丼",
+      "price": 220,
+      "tax": 18.0,
+      "stress": 50
+    },
+    {
+      "name": "愛麗絲的布偶便當",
+      "price": 200,
+      "tax": 16.0,
+      "stress": 45
+    },
+    {
+      "name": "妖夢的半靈燒鯖魚定食",
+      "price": 190,
+      "tax": 15.0,
+      "stress": 42
+    }
+  ]
+}
