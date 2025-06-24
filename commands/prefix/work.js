@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -19,7 +19,7 @@ const gamblerQuotes = [
 
 function getAllUserJobs() {
   const configDir = path.dirname(userJobsPath);
-  if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
+  if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true }); // 保證config資料夾存在
   if (!fs.existsSync(userJobsPath)) {
     fs.writeFileSync(userJobsPath, JSON.stringify({}, null, 2));
     return {};
@@ -102,161 +102,120 @@ function setCooldown(guildId, userId, timestamp) {
 }
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('work')
-    .setDescription('上班領取工資，有五分鐘冷卻，並會增加壓力值'),
-  async execute(interaction) {
-    const guildId = interaction.guildId;
-    const userId = interaction.user.id;
-
-    try {
-      if (!guildId) {
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('🌸 幽幽子提醒你～')
-              .setColor(0xffb7e0)
-              .setDescription('只能在伺服器中使用本指令喲～')
-          ],
-          flags: MessageFlags.Ephemeral
-        });
-        return;
-      }
-
-      // 職業與壓力
-      const jobData = getUserJobData(guildId, userId);
-      if (!jobData) {
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('🌸 迷路的靈魂～')
-              .setColor(0xffb7e0)
-              .setDescription('你尚未選擇職業呢！請先使用 `/choose_jobs` 選擇一份適合你的工作，幽幽子會期待你的表現喲！')
-          ],
-          flags: MessageFlags.Ephemeral
-        });
-        return;
-      }
-
-      // 賭徒彩蛋
-      if (jobData.job === '賭徒') {
-        const quote = gamblerQuotes[Math.floor(Math.random() * gamblerQuotes.length)];
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('🌸 賭徒的靈魂擺爛中 🌸')
-              .setColor(0x9b59b6)
-              .setDescription(`${quote}\n\n幽幽子：看來你已經走上了賭博之路，工作對你來說已經沒有意義了呢～`)
-          ],
-          flags: MessageFlags.Ephemeral
-        });
-        return;
-      }
-
-      // 檢查冷卻
-      const cooldown = getCooldown(guildId, userId);
-      const now = Date.now();
-      const cooldownTime = 5 * 60 * 1000; // 5分鐘
-      if (cooldown && now - cooldown < cooldownTime) {
-        const left = Math.ceil((cooldownTime - (now - cooldown)) / 1000);
-        const min = Math.floor(left / 60);
-        const sec = left % 60;
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('🌸 靈魂還在休息喲～')
-              .setColor(0xffc300)
-              .setDescription(`還要再等 ${min > 0 ? `${min}分` : ''}${sec}秒才能再努力工作一次喔！幽幽子等你一起加油！`)
-          ],
-          flags: MessageFlags.Ephemeral
-        });
-        return;
-      }
-
-      // 讀取職業工資範圍
-      if (!fs.existsSync(jobsPath)) {
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('🌸 沒有找到職業資料')
-              .setColor(0xffb7e0)
-              .setDescription('幽幽子找不到職業資料，請聯絡管理員喲～')
-          ],
-          flags: MessageFlags.Ephemeral
-        });
-        return;
-      }
-      const jobsData = JSON.parse(fs.readFileSync(jobsPath, 'utf8'));
-      const curJob = jobData.job;
-      const jobInfo = jobsData[curJob];
-      if (!jobInfo) {
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('🌸 職業失蹤了？')
-              .setColor(0xffb7e0)
-              .setDescription(`你的職業資料異常（職業：${curJob}），請重新選擇職業，幽幽子會守護你的靈魂之路！`)
-          ],
-          flags: MessageFlags.Ephemeral
-        });
-        return;
-      }
-
-      // 隨機工資
-      const pay = Math.floor(Math.random() * (jobInfo.max - jobInfo.min + 1)) + jobInfo.min;
-
-      // 經濟 balance
-      let balance = getUserEconomy(guildId, userId);
-      balance += pay;
-      setUserEconomy(guildId, userId, balance);
-
-      // 壓力
-      jobData.stress = (jobData.stress ?? 0) + 10;
-      setUserJobData(guildId, userId, jobData);
-
-      // 設定冷卻
-      setCooldown(guildId, userId, now);
-
-      // 回覆（公開）
-      const embed = new EmbedBuilder()
-        .setTitle('🌸 幽幽子的靈魂工資袋～')
-        .setColor(0xffb7e0)
-        .setDescription(
-          `你努力工作了一番，幽幽子特地為你準備了 **${pay} 金幣** 💰！\n\n` +
-          `目前幽靈幣餘額：**${balance}**\n` +
-          `壓力值增加了 10 點（目前壓力：${jobData.stress}）\n\n` +
-          `「多勞多得，休息也要記得喲～🌸」`
-        )
-        .setFooter({ text: `職業：${curJob} ｜ 發薪人：幽幽子` });
-
-      await interaction.reply({
-        embeds: [embed]
-        // 不加 flags，訊息將公開
+  name: 'work',
+  description: '上班領取工資，有五分鐘冷卻，並會增加壓力值',
+  async execute(message) {
+    if (!message.guild) {
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('🌸 幽幽子提醒你～')
+            .setColor(0xffb7e0)
+            .setDescription('只能在伺服器中使用本指令喲～')
+        ]
       });
-    } catch (err) {
-      try {
-        if (interaction.deferred || interaction.replied) {
-          await interaction.editReply({
-            embeds: [
-              new EmbedBuilder()
-                .setTitle('🌸 發生了一點小意外')
-                .setColor(0xffb7e0)
-                .setDescription('幽幽子在發工資時迷路了，請稍後再試一次吧～')
-            ]
-          });
-        } else {
-          await interaction.reply({
-            embeds: [
-              new EmbedBuilder()
-                .setTitle('🌸 發生了一點小意外')
-                .setColor(0xffb7e0)
-                .setDescription('幽幽子在發工資時迷路了，請稍後再試一次吧～')
-            ],
-            flags: MessageFlags.Ephemeral
-          });
-        }
-      } catch {}
-      console.error('[work] 指令處理例外:', err);
     }
+    const guildId = message.guild.id;
+    const userId = message.author.id;
+
+    // 職業與壓力
+    const jobData = getUserJobData(guildId, userId);
+    if (!jobData) {
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('🌸 迷路的靈魂～')
+            .setColor(0xffb7e0)
+            .setDescription('你尚未選擇職業呢！請先使用 `!choose_jobs` 選擇一份適合你的工作，幽幽子會期待你的表現喲！')
+        ]
+      });
+    }
+
+    // 賭徒彩蛋
+    if (jobData.job === '賭徒') {
+      const quote = gamblerQuotes[Math.floor(Math.random() * gamblerQuotes.length)];
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('🌸 賭徒的靈魂擺爛中 🌸')
+            .setColor(0x9b59b6)
+            .setDescription(`${quote}\n\n幽幽子：看來你已經走上了賭博之路，工作對你來說已經沒有意義了呢～`)
+        ]
+      });
+    }
+
+    // 檢查冷卻
+    const cooldown = getCooldown(guildId, userId);
+    const now = Date.now();
+    const cooldownTime = 5 * 60 * 1000; // 5分鐘
+    if (cooldown && now - cooldown < cooldownTime) {
+      const left = Math.ceil((cooldownTime - (now - cooldown)) / 1000);
+      const min = Math.floor(left / 60);
+      const sec = left % 60;
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('🌸 靈魂還在休息喲～')
+            .setColor(0xffc300)
+            .setDescription(`還要再等 ${min > 0 ? `${min}分` : ''}${sec}秒才能再努力工作一次喔！幽幽子等你一起加油！`)
+        ]
+      });
+    }
+
+    // 讀取職業工資範圍
+    if (!fs.existsSync(jobsPath)) {
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('🌸 沒有找到職業資料')
+            .setColor(0xffb7e0)
+            .setDescription('幽幽子找不到職業資料，請聯絡管理員喲～')
+        ]
+      });
+    }
+    const jobsData = JSON.parse(fs.readFileSync(jobsPath, 'utf8'));
+    const curJob = jobData.job;
+    const jobInfo = jobsData[curJob];
+    if (!jobInfo) {
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('🌸 職業失蹤了？')
+            .setColor(0xffb7e0)
+            .setDescription(`你的職業資料異常（職業：${curJob}），請重新選擇職業，幽幽子會守護你的靈魂之路！`)
+        ]
+      });
+    }
+
+    // 隨機工資
+    const pay = Math.floor(Math.random() * (jobInfo.max - jobInfo.min + 1)) + jobInfo.min;
+
+    // 經濟 balance
+    let balance = getUserEconomy(guildId, userId);
+    balance += pay;
+    setUserEconomy(guildId, userId, balance);
+
+    // 壓力
+    jobData.stress = (jobData.stress ?? 0) + 10;
+    setUserJobData(guildId, userId, jobData);
+
+    // 設定冷卻
+    setCooldown(guildId, userId, now);
+
+    // 回覆（公開）
+    const embed = new EmbedBuilder()
+      .setTitle('🌸 幽幽子的靈魂工資袋～')
+      .setColor(0xffb7e0)
+      .setDescription(
+        `你努力工作了一番，幽幽子特地為你準備了 **${pay} 金幣** 💰！\n\n` +
+        `目前幽靈幣餘額：**${balance}**\n` +
+        `壓力值增加了 10 點（目前壓力：${jobData.stress}）\n\n` +
+        `「多勞多得，休息也要記得喲～🌸」`
+      )
+      .setFooter({ text: `職業：${curJob} ｜ 發薪人：幽幽子` });
+
+    return message.reply({
+      embeds: [embed]
+    });
   }
 };
